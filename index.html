@@ -663,8 +663,10 @@ function calcB14(F2){
 
 function numVal(id){return Number(String($(id).value||"").replace(/\D/g,""))||0;}
 function brR(v){
-  return new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",
-    minimumFractionDigits:0,maximumFractionDigits:0}).format(Math.round(v));
+  // Formato: R$ 100.000  (ponto de milhar, sem centavos)
+  return "R$ " + Math.round(v).toLocaleString("pt-BR",{
+    minimumFractionDigits:0, maximumFractionDigits:0
+  });
 }
 function rf(el){
   const mn=+el.min,mx=+el.max,v=+el.value;
