@@ -36,7 +36,7 @@ input,select,button{font:inherit}
 .body{
   flex:1 1 0;min-height:0;
   display:grid;
-  grid-template-columns:340px 1fr;
+  grid-template-columns:300px 1fr;
 }
 
 /* ESQUERDO */
@@ -76,7 +76,7 @@ input,select,button{font:inherit}
 
 /* CAMPOS */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.g3{display:grid;grid-template-columns:1.3fr 0.7fr 1.2fr;gap:6px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;}
 .dates-grid{grid-template-columns:1fr;}
 .dates-grid .field{min-width:0;}
 .dates-grid .field label{font-size:8px;line-height:1.2;}
@@ -100,7 +100,7 @@ select{
   background-position:calc(100% - 14px) 14px,calc(100% - 9px) 14px;
   background-size:5px 5px;background-repeat:no-repeat;padding-right:28px;
 }
-.ro{background:rgba(255,200,0,.08)!important;border-color:rgba(255,200,0,.35)!important;color:#ffd700!important;font-weight:900!important;cursor:default;font-size:13px!important;height:42px!important;padding:0 6px!important;text-align:center;letter-spacing:-.3px;}
+.ro{background:rgba(255,200,0,.08)!important;border-color:rgba(255,200,0,.35)!important;color:#ffd700!important;font-weight:900!important;cursor:default;font-size:13px!important;height:38px!important;padding:0 6px!important;text-align:center;letter-spacing:-.25px;}
 
 /* RANGE */
 .rng-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
@@ -226,9 +226,7 @@ input[type="range"]::-webkit-slider-thumb{
 
 @media (max-width:960px){
   body{overflow-y:auto;height:auto;min-height:100vh;}
-  .body{grid-template-columns:1fr!important;overflow:visible;}
-  .left .g2,.left .g3,.left [class*="g-"]{grid-template-columns:1fr!important;gap:8px!important;}
-  .left .g2 > *,.left .g3 > *{min-width:0!important;}
+  .body{grid-template-columns:1fr;overflow:visible;}
   .left{border-right:0;border-bottom:1px solid rgba(255,255,255,.08);overflow-y:visible;}
   .right{overflow-y:visible;justify-content:flex-start;}
   /* sinal: 3 campos em 2 colunas (Valor Sinal + % após 6m em cima, Valor após 6m embaixo) */
@@ -256,7 +254,7 @@ input[type="range"]::-webkit-slider-thumb{
   .g2{gap:6px;}
   .g3{gap:4px;}
   .field label{font-size:8px;line-height:1.15;}
-  .ro{font-size:15px!important;height:44px!important;padding:0 10px!important;}
+  .ro{font-size:11px!important;padding:0 4px!important;}
   .dates-grid{grid-template-columns:1fr;}
   .dates-grid .field:last-child{grid-column:auto;}
   .dates-grid .field label{font-size:7px;}
@@ -371,7 +369,7 @@ input[type="range"]::-webkit-slider-thumb{
         </div>
         <div class="field">
           <label>Preço do Veículo (R$)</label>
-          <input id="preco" type="text" inputmode="numeric" placeholder="Ex: 99000">
+          <input id="preco" type="text" inputmode="numeric" placeholder="Ex: 100000">
         </div>
       </div>
 
@@ -470,16 +468,6 @@ input[type="range"]::-webkit-slider-thumb{
       </div>
     </div>
 
-    <!-- DATA -->
-    <div class="blk" style="padding:8px 12px;">
-      <div class="g3 dates-grid">
-        <div class="field">
-          <label>Data da Simulação</label>
-          <input id="dataSimulacaoField" type="date" class="ro">
-        </div>
-      </div>
-    </div>
-
     <!-- STATUS -->
     <div class="status" id="sBar">
       <div class="status-txt" id="sTxt">Preencha valor e parcela</div>
@@ -492,6 +480,13 @@ input[type="range"]::-webkit-slider-thumb{
   </div>
   <!-- DIREITO -->
   <div class="right">
+
+    <!-- DATA DA SIMULAÇÃO — topo do painel direito -->
+    <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:4px;">
+      <span style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:#7a9ab8;">Data da Simulação</span>
+      <input id="dataSimulacaoField" type="date" class="ro"
+        style="width:150px;height:34px;font-size:12px;padding:0 8px;text-align:center;border-radius:8px;">
+    </div>
 
     <!-- LINHA 1: VAREJO — sempre visível -->
     <div class="cmp-row row-v" id="rowVarejo">
@@ -693,9 +688,7 @@ function fmtMesAno(d){
   return d.toLocaleDateString("pt-BR",{month:"long",year:"numeric"});
 }
 function fmtMesAnoCampo(d){
-  // formato curto: "nov/26" — sempre cabe no campo
-  const mesesAbr = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-  const mes = mesesAbr[d.getMonth()];
+  const mes = d.toLocaleDateString("pt-BR",{month:"long"});
   const ano = String(d.getFullYear()).slice(-2);
   return `${mes}/${ano}`;
 }
