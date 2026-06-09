@@ -211,6 +211,26 @@ input[type="range"]::-webkit-slider-thumb{
   border:1px solid rgba(37,215,243,.5);color:#25d7f3;
   display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;}
 
+/* DATA SIMULAÇÃO */
+.data-row{
+  display:flex;align-items:center;justify-content:flex-end;gap:8px;
+  margin-bottom:6px;padding:6px 10px;
+  background:rgba(8,22,42,.7);border:1px solid rgba(255,255,255,.09);
+  border-radius:9px;
+}
+.data-row label{
+  font-size:10px;font-weight:900;text-transform:uppercase;
+  letter-spacing:.7px;color:#7a9ab8;margin:0;white-space:nowrap;
+}
+.data-row input{
+  width:148px;height:32px;font-size:12px;padding:0 8px;
+  text-align:center;border-radius:7px;flex-shrink:0;
+}
+@media (max-width:960px){
+  .data-row{justify-content:space-between;}
+  .data-row input{width:160px;height:38px;font-size:13px;}
+}
+
 /* BANNER GIRAR */
 .rotate-banner{
   display:none;position:fixed;inset:0;z-index:9999;
@@ -481,11 +501,12 @@ input[type="range"]::-webkit-slider-thumb{
   <!-- DIREITO -->
   <div class="right">
 
-    <!-- DATA DA SIMULAÇÃO — topo do painel direito -->
-    <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:4px;">
-      <span style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:#7a9ab8;">Data da Simulação</span>
-      <input id="dataSimulacaoField" type="date" class="ro"
-        style="width:150px;height:34px;font-size:12px;padding:0 8px;text-align:center;border-radius:8px;">
+
+
+    <!-- DATA DA SIMULAÇÃO — sempre acima do Compra Varejo -->
+    <div class="data-row">
+      <label>Data da Simulação</label>
+      <input id="dataSimulacaoField" type="date" class="ro">
     </div>
 
     <!-- LINHA 1: VAREJO — sempre visível -->
@@ -919,8 +940,19 @@ $("ePct").addEventListener("input",calc);
 $("eFlexPct").addEventListener("input",calc);
 $("mesesFlex").addEventListener("input",calc);
 $("sPct").addEventListener("input",calc);
-$("preco").addEventListener("input",calc);
-$("parc").addEventListener("input",calc);
+$("preco").addEventListener("input",function(){
+  // formata com ponto de milhar enquanto digita
+  const raw = this.value.replace(/\D/g,"");
+  if(raw) this.value = Number(raw).toLocaleString("pt-BR");
+  else this.value = "";
+  calc();
+});
+$("parc").addEventListener("input",function(){
+  const raw = this.value.replace(/\D/g,"");
+  if(raw) this.value = Number(raw).toLocaleString("pt-BR");
+  else this.value = "";
+  calc();
+});
 $("modelo").addEventListener("change",calc);
 $("dataSimulacaoField").addEventListener("change",calc);
 $("dlBtn").addEventListener("click",download);
