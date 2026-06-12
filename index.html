@@ -762,17 +762,17 @@ function calc(){
   // B13 = PMT(B12,48,F3)*-(1-D5)
   const B13 = (F3*B12/(1-Math.pow(1+B12,-48))) * (1-D5);
 
-  // C7 = IF((D5-C6)<C6, "Reduzir Sinal", D5-C6)
-  const C7 = (D5-C6) < C6 ? "Reduzir Sinal" : (D5-C6);
+  // C7 = complemento (% entrada futura = pctEF - pctS)
+  const C7 = D5 - C6;
 
   // D6 — sinal R$ ou trava
+  // TRAVA ÚNICA: complemento (entrada futura) mínimo 10%
+  // pctEF - pctS >= 10%  →  C7 >= 0.10
   let D6;
   if(!F3 || !F4)                      D6 = null;
   else if(F5 < B15)                   D6 = "Meses Flex";
   else if(F5 > B14)                   D6 = `Meses Flex (máx ${B14})`;
-  else if(D5 < (C4 - B19))            D6 = "Check Banco";
-  else if(C6 < B18)                   D6 = "Check Sinal";
-  else if(typeof C7==="string")       D6 = "Reduzir Sinal";
+  else if((D5 - C6) < 0.10)           D6 = "Entrada futura mínima é 10%";
   else                                D6 = F3 * C6;
 
   // D7 = IF(ISTEXT(D6),"0", F3*(D5-C6))
@@ -784,10 +784,8 @@ function calc(){
   // F7 = IF(ISTEXT(D6),"0", F6/(1-C6)*(1-D5))
   const F7raw = (typeof D6==="number") ? F6/(1-C6)*(1-D5) : 0;
 
-  // E13 = IF(F7<B13,"Check Banco",F7) — trava parcela mínima
+  // E13 removido — sem trava de parcela mínima
   let F7 = F7raw;
-  if(typeof D6==="number" && F7raw < B13) D6 = "Check Banco";
-  if(typeof D6==="number") F7 = F7raw;
 
   // F8 = F7 + B17
   const F8 = (typeof D6==="number") ? F7 + B17 : 0;
@@ -855,10 +853,8 @@ function calc(){
 
   // ── STATUS ───────────────────────────────────────────────
   const msgs={
-    "Meses Flex":    `Meses Flex deve ser entre ${B15} e ${B14}`,
-    "Check Banco":   `Parcela ou entrada fora dos parâmetros (mín ${brR(B13)})`,
-    "Check Sinal":   "Sinal mínimo é 15%",
-    "Reduzir Sinal": "Sinal não pode superar o complemento"
+    "Meses Flex":              `Meses Flex deve ser entre ${B15} e ${B14}`,
+    "Entrada futura mínima é 10%": "Entrada futura deve ser no mínimo 10% do veículo"
   };
   const bar=$("sBar"),txt=$("sTxt"),ico=$("sIco");
   if(!F3||!F4){bar.className="status";  txt.textContent="Preencha valor e parcela"; ico.textContent="—";}
